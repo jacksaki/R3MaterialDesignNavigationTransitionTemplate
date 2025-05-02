@@ -13,12 +13,32 @@
     mc:Ignorable="d">
     <wpf:Transitioner SelectedIndex="{Binding CurrentPageIndex.Value}">
         <wpf:TransitionerSlide>
+            <wpf:TransitionerSlide.ForwardWipe>
+                <wpf:SlideWipe Direction="Left" />
+            </wpf:TransitionerSlide.ForwardWipe>
+            <wpf:TransitionerSlide.BackwardWipe>
+                <wpf:SlideWipe Direction="Right" />
+            </wpf:TransitionerSlide.BackwardWipe>
             <t:Page1Box />
         </wpf:TransitionerSlide>
+
         <wpf:TransitionerSlide>
+            <wpf:TransitionerSlide.ForwardWipe>
+                <wpf:SlideWipe Direction="Left" />
+            </wpf:TransitionerSlide.ForwardWipe>
+            <wpf:TransitionerSlide.BackwardWipe>
+                <wpf:SlideWipe Direction="Right" />
+            </wpf:TransitionerSlide.BackwardWipe>
             <t:Page2Box />
         </wpf:TransitionerSlide>
+
         <wpf:TransitionerSlide>
+            <wpf:TransitionerSlide.ForwardWipe>
+                <wpf:SlideWipe Direction="Left" />
+            </wpf:TransitionerSlide.ForwardWipe>
+            <wpf:TransitionerSlide.BackwardWipe>
+                <wpf:SlideWipe Direction="Right" />
+            </wpf:TransitionerSlide.BackwardWipe>
             <t:Page3Box />
         </wpf:TransitionerSlide>
     </wpf:Transitioner>

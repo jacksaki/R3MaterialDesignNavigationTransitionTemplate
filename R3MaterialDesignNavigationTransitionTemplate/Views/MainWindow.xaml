@@ -22,6 +22,8 @@
     GlowBrush="{DynamicResource AccentColorBrush}"
     Style="{StaticResource MaterialDesignWindow}"
     TextElement.FontSize="16"
+    WindowStartupLocation="CenterScreen"
+    SizeToContent="WidthAndHeight"    
     TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     TextOptions.TextFormattingMode="Ideal"

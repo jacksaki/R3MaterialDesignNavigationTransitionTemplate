@@ -12,6 +12,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels.Transitions
     {
         public TransitionBoxViewModel Parent { get; }
         public ReactiveCommand NextCommand { get; }
+
         public Page1BoxViewModel(TransitionBoxViewModel parent) : base()
         {
             this.Parent = parent;

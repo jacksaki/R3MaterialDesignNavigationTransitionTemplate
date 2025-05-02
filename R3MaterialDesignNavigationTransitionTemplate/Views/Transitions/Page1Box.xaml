@@ -8,6 +8,7 @@
     xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:t="clr-namespace:R3MaterialDesignNavigationTransitionTemplate.Views.Transitions"
              mc:Ignorable="d" 
+             Background="LightBlue"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -22,8 +23,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Command="{Binding PreviousCommand}" Content="{wpf:PackIcon Kind=ArrowLeft}"/>
-            <Button Grid.Column="2" Command="{Binding NextCommand}" Content="{wpf:PackIcon Kind=ArrowLeft}"/>
+            <Button Grid.Column="1" IsEnabled="False" Margin="4,4,40,4" wpf:ElevationAssist.Elevation="Dp4" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Content="{wpf:PackIcon Kind=ArrowLeft,Size=28}"/>
+            <Button Grid.Column="2" Command="{Binding NextCommand}" Margin="40,4,4,4" wpf:ElevationAssist.Elevation="Dp4" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Content="{wpf:PackIcon Kind=ArrowRight, Size=28}"/>
         </Grid>
     </Grid>
 </UserControl>
