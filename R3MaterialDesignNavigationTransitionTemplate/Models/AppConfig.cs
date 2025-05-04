@@ -18,7 +18,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Models
             System.IO.File.WriteAllText(Path, JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true }));
         }
 
-        public void Save<T>(T vm) where T : BoxViewModelBase
+        public void Save<T>(T vm) where T : ViewModelBase
         {
             var jobj = vm.ToJsonObject<T>();
             if (this.JsonObject == null)
@@ -42,7 +42,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Models
             }
         }
 
-        public void Load<T>(T vm) where T : BoxViewModelBase
+        public void Load<T>(T vm) where T : ViewModelBase
         {
             vm.SetJsonObject(this.JsonObject);
         }

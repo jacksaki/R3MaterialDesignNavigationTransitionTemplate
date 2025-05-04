@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using R3MaterialDesignNavigationTransitionTemplate.Models;
+using System.Text.Json.Serialization;
 using System.Windows.Media;
-using R3MaterialDesignNavigationTransitionTemplate.Models;
 
 namespace R3MaterialDesignNavigationTransitionTemplate.Services
 {

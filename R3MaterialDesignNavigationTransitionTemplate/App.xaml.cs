@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Media.Animation;
-using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,8 +30,6 @@ namespace R3MaterialDesignNavigationTransitionTemplate
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<SampleBox>();
                 services.AddSingleton<SampleBoxViewModel>();
-                services.AddSingleton<ColorToolBoxViewModel>();
-                services.AddSingleton<ThemeSettingsViewModel>();
                 services.AddSingleton<TransitionBox>();
                 services.AddSingleton<TransitionBoxViewModel>();
                 services.AddSingleton<Page1Box>();
@@ -43,6 +39,10 @@ namespace R3MaterialDesignNavigationTransitionTemplate
                 services.AddSingleton<Page3Box>();
                 services.AddSingleton<Page3BoxViewModel>();
                 services.AddTransient(typeof(Lazy<>), typeof(LazyResolver<>));
+                //services.AddSingleton<ThemeSettingsBox>();
+                //services.AddSingleton<ThemeSettingsViewModel>();
+                //services.AddSingleton<ColorToolBox>();
+                //services.AddSingleton<ColorToolBoxViewModel>();
             }).Build();
 
         internal FlowDirection InitialFlowDirection { get; set; }

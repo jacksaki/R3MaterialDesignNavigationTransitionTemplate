@@ -81,7 +81,10 @@
                         </ListBox.Resources>
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="m:MenuItem">
-                                <TextBlock Margin="24,4,0,4" AutomationProperties.AutomationId="MenuItemPage" Text="{Binding Name}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <wpf:PackIcon Kind="{Binding PackIconKind}"/>
+                                    <TextBlock Margin="24,4,0,4" AutomationProperties.AutomationId="MenuItemPage" Text="{Binding Name}" />
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

@@ -10,13 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\ColorToolBoxViewModel.cs" />
+    <Compile Remove="ViewModels\ThemeSettingsViewModel.cs" />
     <Compile Remove="Views\ColorToolBox.xaml.cs" />
-    <Compile Remove="Views\ThemeSettings.xaml.cs" />
+    <Compile Remove="Views\ThemeSettingsBox.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Page Remove="Views\ColorToolBox.xaml" />
-    <Page Remove="Views\ThemeSettings.xaml" />
+    <Page Remove="Views\ThemeSettingsBox.xaml" />
   </ItemGroup>
 
   <ItemGroup>

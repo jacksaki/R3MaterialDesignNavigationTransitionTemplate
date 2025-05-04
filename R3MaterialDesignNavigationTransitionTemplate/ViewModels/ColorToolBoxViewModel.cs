@@ -3,38 +3,54 @@ using System.Windows.Media;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using R3;
+using R3MaterialDesignNavigationTransitionTemplate.Extensions.R3Json;
 using R3MaterialDesignNavigationTransitionTemplate.Models;
 
 namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 {
+    [BindableObject("color_tool")]
     internal class ColorToolBoxViewModel : BoxViewModelBase
     {
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-
         public ReactiveCommand<Color> ChangeCustomHueCommand { get; }
-
         public ReactiveCommand<Color> ChangeHueCommand { get; }
         public ReactiveCommand ChangeToPrimaryCommand { get; }
         public ReactiveCommand ChangeToSecondaryCommand { get; }
         public ReactiveCommand ChangeToPrimaryForegroundCommand { get; }
         public ReactiveCommand ChangeToSecondaryForegroundCommand { get; }
         public ReactiveCommand<bool> ToggleBaseCommand { get; }
-        public BindableReactiveProperty<ColorScheme> ActiveScheme { get; }
+
         public BindableReactiveProperty<Color?> SelectedColor { get; }
         public IEnumerable<ISwatch> Swatches { get; } = SwatchHelper.Swatches;
+
+        public BindableReactiveProperty<ColorScheme> ActiveScheme { get; }
+
+        [BindableProperty("primary_color")]
+        public Color? PrimaryColor { get; set; }
+        [BindableProperty("secondary_color")]
+
+        public Color? SecondaryColor { get; set; }
+
+        [BindableProperty("primary_foreground_color")]
+        public Color? PrimaryForegroundColor { get; set; }
+
+        [BindableProperty("secondary_foreground_color")]
+        public Color? SecondaryForegroundColor { get; set; }
 
         private void ApplyBase(bool isDark)
         {
             Theme theme = _paletteHelper.GetTheme();
             theme.SetBaseTheme(isDark ? BaseTheme.Dark : BaseTheme.Light);
             _paletteHelper.SetTheme(theme);
+            App.GetService<AppConfig>()!.Save(this);
         }
 
         public ColorToolBoxViewModel() : base()
         {
+            var conf = App.GetService<AppConfig>()!;
             this.ActiveScheme = new BindableReactiveProperty<ColorScheme>(ColorScheme.Primary);
             this.ToggleBaseCommand = new ReactiveCommand<bool>();
-            this.ToggleBaseCommand.Subscribe(o => ApplyBase((bool)o!));
+            this.ToggleBaseCommand.Subscribe(x => ApplyBase((bool)x!));
             this.ChangeHueCommand = new ReactiveCommand<Color>();
             this.ChangeHueCommand.Subscribe(x => ChangeHue(x));
             this.ChangeCustomHueCommand = new ReactiveCommand<Color>();
@@ -53,10 +69,10 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             {
                 var currentSchemeColor = ActiveScheme.Value switch
                 {
-                    ColorScheme.Primary => _primaryColor,
-                    ColorScheme.Secondary => _secondaryColor,
-                    ColorScheme.PrimaryForeground => _primaryForegroundColor,
-                    ColorScheme.SecondaryForeground => _secondaryForegroundColor,
+                    ColorScheme.Primary => this.PrimaryColor,
+                    ColorScheme.Secondary => this.SecondaryColor,
+                    ColorScheme.PrimaryForeground => this.PrimaryForegroundColor,
+                    ColorScheme.SecondaryForeground => this.SecondaryForegroundColor,
                     _ => throw new NotSupportedException($"{ActiveScheme} is not a handled ColorScheme.. Ye daft programmer!")
                 };
 
@@ -68,10 +84,10 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 
             Theme theme = _paletteHelper.GetTheme();
 
-            _primaryColor = theme.PrimaryMid.Color;
-            _secondaryColor = theme.SecondaryMid.Color;
-
-            SelectedColor.Value = _primaryColor;
+            this.PrimaryColor = theme.PrimaryMid.Color;
+            this.SecondaryColor = theme.SecondaryMid.Color;
+            SelectedColor.Value = this.PrimaryColor;
+            conf.Load<ColorToolBoxViewModel>(this);
         }
 
         private void ChangeCustomColor(Color color)
@@ -79,23 +95,25 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             if (ActiveScheme.Value == ColorScheme.Primary)
             {
                 _paletteHelper.ChangePrimaryColor(color);
-                _primaryColor = color;
+                this.PrimaryColor = color;
             }
             else if (ActiveScheme.Value == ColorScheme.Secondary)
             {
                 _paletteHelper.ChangeSecondaryColor(color);
-                _secondaryColor = color;
+                this.SecondaryColor = color;
             }
             else if (ActiveScheme.Value == ColorScheme.PrimaryForeground)
             {
                 _paletteHelper.SetPrimaryForegroundToSingleColor(color);
-                _primaryForegroundColor = color;
+                this.PrimaryForegroundColor = color;
             }
             else if (ActiveScheme.Value == ColorScheme.SecondaryForeground)
             {
                 _paletteHelper.SetSecondaryForegroundToSingleColor(color);
-                _secondaryForegroundColor = color;
+                this.SecondaryForegroundColor = color;
             }
+            RaisePropertyChanged(nameof(ActiveScheme));
+            App.GetService<AppConfig>()!.Save(this);
         }
 
         private void ChangeScheme(ColorScheme scheme)
@@ -103,29 +121,22 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             this.ActiveScheme.Value = scheme;
             if (ActiveScheme.Value == ColorScheme.Primary)
             {
-                SelectedColor.Value = _primaryColor;
+                SelectedColor.Value = this.PrimaryColor;
             }
             else if (ActiveScheme.Value == ColorScheme.Secondary)
             {
-                SelectedColor.Value = _secondaryColor;
+                SelectedColor.Value = this.SecondaryColor;
             }
             else if (ActiveScheme.Value == ColorScheme.PrimaryForeground)
             {
-                SelectedColor.Value = _primaryForegroundColor;
+                SelectedColor.Value = this.PrimaryForegroundColor;
             }
             else if (ActiveScheme.Value == ColorScheme.SecondaryForeground)
             {
-                SelectedColor.Value = _secondaryForegroundColor;
+                SelectedColor.Value = this.SecondaryForegroundColor;
             }
+            RaisePropertyChanged(nameof(ActiveScheme));
         }
-
-        private Color? _primaryColor;
-
-        private Color? _secondaryColor;
-
-        private Color? _primaryForegroundColor;
-
-        private Color? _secondaryForegroundColor;
 
         private void ChangeHue(Color hue)
         {
@@ -133,25 +144,27 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             if (ActiveScheme.Value == ColorScheme.Primary)
             {
                 _paletteHelper.ChangePrimaryColor(hue);
-                _primaryColor = hue;
-                _primaryForegroundColor = _paletteHelper.GetTheme().PrimaryMid.GetForegroundColor();
+                this.PrimaryColor = hue;
+                this.PrimaryForegroundColor = _paletteHelper.GetTheme().PrimaryMid.GetForegroundColor();
             }
             else if (ActiveScheme.Value == ColorScheme.Secondary)
             {
                 _paletteHelper.ChangeSecondaryColor(hue);
-                _secondaryColor = hue;
-                _secondaryForegroundColor = _paletteHelper.GetTheme().SecondaryMid.GetForegroundColor();
+                this.SecondaryColor = hue;
+                this.SecondaryForegroundColor = _paletteHelper.GetTheme().SecondaryMid.GetForegroundColor();
             }
             else if (ActiveScheme.Value == ColorScheme.PrimaryForeground)
             {
                 _paletteHelper.SetPrimaryForegroundToSingleColor(hue);
-                _primaryForegroundColor = hue;
+                this.PrimaryForegroundColor = hue;
             }
             else if (ActiveScheme.Value == ColorScheme.SecondaryForeground)
             {
                 _paletteHelper.SetSecondaryForegroundToSingleColor(hue);
-                _secondaryForegroundColor = hue;
+                this.SecondaryForegroundColor = hue;
             }
+            RaisePropertyChanged(nameof(ActiveScheme));
+            App.GetService<AppConfig>()!.Save(this);
         }
     }
 }
