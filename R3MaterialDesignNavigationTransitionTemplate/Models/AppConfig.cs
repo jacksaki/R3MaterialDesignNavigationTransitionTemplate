@@ -4,9 +4,9 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using R3MaterialDesignNavigationTransitionTemplate.Extensions.R3Json;
 using R3MaterialDesignNavigationTransitionTemplate.ViewModels;
-
 namespace R3MaterialDesignNavigationTransitionTemplate.Models
 {
     public class AppConfig : IHasJsonObject
@@ -15,7 +15,12 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Models
 
         public void SaveToFile()
         {
-            System.IO.File.WriteAllText(Path, JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true }));
+            var options = new JsonSerializerOptions() { 
+                WriteIndented = true,
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+            };
+            options.MakeReadOnly();
+            System.IO.File.WriteAllText(Path, this.JsonObject?.ToJsonString(options));
         }
 
         public void Save<T>(T vm) where T : ViewModelBase
@@ -38,7 +43,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Models
             }
             else
             {
-                this.JsonObject[key.Name] = jobj;
+                this.JsonObject[key.Name] = jobj![key.Name]?.DeepClone();
             }
         }
 
@@ -46,6 +51,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Models
         {
             vm.SetJsonObject(this.JsonObject);
         }
+
         public JsonObject? JsonObject { get; set; }
         public static AppConfig Load()
         {

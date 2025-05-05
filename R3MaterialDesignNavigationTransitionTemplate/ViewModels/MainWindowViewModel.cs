@@ -98,9 +98,9 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 
         private static IEnumerable<NavigationMenuItem> GenerateMenuItems()
         {
-            yield return new NavigationMenuItem("Sample", typeof(SampleBox), PackIconKind.Home, ScrollBarVisibility.Disabled);
-            yield return new NavigationMenuItem("Transition", typeof(TransitionBox), PackIconKind.Transition, ScrollBarVisibility.Disabled);
-            //yield return new NavigationMenuItem("Color", typeof(ColorToolBox), PackIconKind.Palette, ScrollBarVisibility.Disabled);
+            yield return new NavigationMenuItem("Sample", typeof(SampleBox), PackIconKind.Home);
+            yield return new NavigationMenuItem("Transition", typeof(TransitionBox), PackIconKind.Transition);
+            yield return new NavigationMenuItem("Color", typeof(ColorSettingsBox), PackIconKind.Palette, ScrollBarVisibility.Disabled, ScrollBarVisibility.Auto);
         }
 
         private bool MenuItemsFilter(object obj)

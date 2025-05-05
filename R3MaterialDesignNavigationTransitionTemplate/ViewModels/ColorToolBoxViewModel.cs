@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using R3;
@@ -48,6 +47,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
         public ColorToolBoxViewModel() : base()
         {
             var conf = App.GetService<AppConfig>()!;
+            this.SelectedColor = new BindableReactiveProperty<Color?>();
             this.ActiveScheme = new BindableReactiveProperty<ColorScheme>(ColorScheme.Primary);
             this.ToggleBaseCommand = new ReactiveCommand<bool>();
             this.ToggleBaseCommand.Subscribe(x => ApplyBase((bool)x!));
@@ -64,7 +64,6 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             this.ChangeToSecondaryForegroundCommand = new ReactiveCommand();
             this.ChangeToSecondaryForegroundCommand.Subscribe(_ => ChangeScheme(ColorScheme.SecondaryForeground));
 
-            this.SelectedColor = new BindableReactiveProperty<Color?>();
             this.SelectedColor.Subscribe(x =>
             {
                 var currentSchemeColor = ActiveScheme.Value switch
@@ -92,6 +91,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 
         private void ChangeCustomColor(Color color)
         {
+            Theme theme = _paletteHelper.GetTheme();
             if (ActiveScheme.Value == ColorScheme.Primary)
             {
                 _paletteHelper.ChangePrimaryColor(color);
@@ -113,6 +113,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
                 this.SecondaryForegroundColor = color;
             }
             RaisePropertyChanged(nameof(ActiveScheme));
+            _paletteHelper.SetTheme(theme);
             App.GetService<AppConfig>()!.Save(this);
         }
 
@@ -140,6 +141,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 
         private void ChangeHue(Color hue)
         {
+            Theme theme = _paletteHelper.GetTheme();
             SelectedColor.Value = hue;
             if (ActiveScheme.Value == ColorScheme.Primary)
             {
@@ -163,6 +165,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
                 _paletteHelper.SetSecondaryForegroundToSingleColor(hue);
                 this.SecondaryForegroundColor = hue;
             }
+            _paletteHelper.SetTheme(theme);
             RaisePropertyChanged(nameof(ActiveScheme));
             App.GetService<AppConfig>()!.Save(this);
         }

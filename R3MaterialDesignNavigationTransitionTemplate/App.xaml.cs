@@ -1,6 +1,10 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Windows;
+using System.Windows.Media;
+using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,10 +43,8 @@ namespace R3MaterialDesignNavigationTransitionTemplate
                 services.AddSingleton<Page3Box>();
                 services.AddSingleton<Page3BoxViewModel>();
                 services.AddTransient(typeof(Lazy<>), typeof(LazyResolver<>));
-                //services.AddSingleton<ThemeSettingsBox>();
-                //services.AddSingleton<ThemeSettingsViewModel>();
-                //services.AddSingleton<ColorToolBox>();
-                //services.AddSingleton<ColorToolBoxViewModel>();
+                services.AddSingleton<ColorSettingsBox>();
+                services.AddSingleton<ColorSettingsBoxViewModel>();
             }).Build();
 
         internal FlowDirection InitialFlowDirection { get; set; }
@@ -74,9 +76,43 @@ namespace R3MaterialDesignNavigationTransitionTemplate
 
         private void InitTheme()
         {
-            //var conf = App.GetService<AppConfig>()!;
-            //var paletteHelper = new PaletteHelper();
-            //paletteHelper.SetConfig(conf.Theme);
+            var conf = App.GetService<AppConfig>()!;
+            var paletteHelper = new PaletteHelper();
+            var jobj = GetColorSettings(conf.JsonObject);
+            if (jobj == null)
+            {
+                return;
+            }
+
+            Theme theme = paletteHelper.GetTheme();
+            theme.SetBaseTheme(jobj["is_dark"]?.GetValue<bool>() == true ? BaseTheme.Dark : BaseTheme.Light);
+            if (jobj.ContainsKey("primary_color"))
+            {
+                var color = JsonSerializer.Deserialize<Color>(jobj["primary_color"]!.ToJsonString());
+                paletteHelper.ChangePrimaryColor(color);
+            }
+            if (jobj.ContainsKey("secondary_color"))
+            {
+                var color = JsonSerializer.Deserialize<Color>(jobj["secondary_color"]!.ToJsonString());
+                paletteHelper.ChangeSecondaryColor(color);
+            }
+            paletteHelper.SetTheme(theme);
+        }
+
+        private JsonObject? GetColorSettings(JsonObject? root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+            else if (!root.ContainsKey("color"))
+            {
+                return null;
+            }
+            else
+            {
+                return root["color"]!.AsObject();
+            }
         }
 
         private async void Application_Exit(object sender, ExitEventArgs e)

@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Windows.Media;
 using R3;
 
 namespace R3MaterialDesignNavigationTransitionTemplate.Extensions.R3Json
@@ -65,6 +66,10 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Extensions.R3Json
                 return arr;
             }
             if (t.IsPrimitive || t == typeof(string) || t == typeof(decimal))
+            {
+                return JsonValue.Create(value);
+            }
+            else if(t == typeof(Color))
             {
                 return JsonValue.Create(value);
             }

@@ -13,17 +13,20 @@ namespace R3MaterialDesignNavigationTransitionTemplate.Models
 
         public object? Content => _content ??= CreateContent();
 
-        public NavigationMenuItem(string name, Type contentType, PackIconKind? packIconKind, ScrollBarVisibility horizontalScrollBarVisibilityRequirement)
+        public NavigationMenuItem(string name, Type contentType, PackIconKind? packIconKind, ScrollBarVisibility horizontalScrollBarVisibilityRequirement, ScrollBarVisibility verticalScrollBarVisibilityRequirement)
         {
             this.Name = name;
             this.PackIconKind = packIconKind;
             _contentType = contentType;
             this.MarginRequirement = new Thickness(16);
             this.HorizontalScrollBarVisibilityRequirement = horizontalScrollBarVisibilityRequirement;
-            this.VerticalScrollBarVisibilityRequirement = ScrollBarVisibility.Disabled;
+            this.VerticalScrollBarVisibilityRequirement = verticalScrollBarVisibilityRequirement;
+        }
+        public NavigationMenuItem(string name, Type t, PackIconKind? packIconKind) : this(name, t, packIconKind, ScrollBarVisibility.Disabled, ScrollBarVisibility.Disabled)
+        {
         }
 
-        public NavigationMenuItem(string name, Type t) : this(name, t , null, ScrollBarVisibility.Disabled)
+        public NavigationMenuItem(string name, Type t) : this(name, t , null, ScrollBarVisibility.Disabled, ScrollBarVisibility.Disabled)
         {
         }
         private object? CreateContent()
