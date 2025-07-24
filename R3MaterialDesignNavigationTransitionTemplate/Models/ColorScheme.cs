@@ -1,16 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace R3MaterialDesignNavigationTransitionTemplate.Models
+namespace R3MaterialDesignNavigationTransitionTemplate.Models;
+
+public enum ColorScheme
 {
-    public enum ColorScheme
-    {
-        [JsonPropertyName("primary")]
-        Primary,
-        [JsonPropertyName("secondary")]
-        Secondary,
-        [JsonPropertyName("primary_foreground")]
-        PrimaryForeground,
-        [JsonPropertyName("secondary_foreground")]
-        SecondaryForeground,
-    }
+    [JsonPropertyName("primary")]
+    Primary,
+    [JsonPropertyName("secondary")]
+    Secondary,
+    [JsonPropertyName("primary_foreground")]
+    PrimaryForeground,
+    [JsonPropertyName("secondary_foreground")]
+    SecondaryForeground,
 }

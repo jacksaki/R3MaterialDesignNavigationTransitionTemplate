@@ -14,7 +14,10 @@
 
         <TextBlock VerticalAlignment="Center" Text="Dark" />
 
-        <TextBlock Margin="50,0,0,0" VerticalAlignment="Center" Text="Color Adjustment" />
+        <TextBlock
+            Margin="50,0,0,0"
+            VerticalAlignment="Center"
+            Text="Color Adjustment" />
 
         <ToggleButton Margin="8,0,0,0" IsChecked="{Binding IsColorAdjusted.Value}" />
 
@@ -32,7 +35,12 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Desired Contrast Ratio" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="10"
+                    VerticalAlignment="Center"
+                    Text="Desired Contrast Ratio" />
                 <Slider
                     Grid.Row="0"
                     Grid.Column="1"
@@ -43,16 +51,33 @@
                     Minimum="1"
                     TickFrequency="0.1"
                     Value="{Binding DesiredContrastRatio.Value}" />
-                <TextBlock Grid.Row="0" Grid.Column="2" Width="40" Margin="8" VerticalAlignment="Center" Text="{Binding DesiredContrastRatio.Value, StringFormat={}{0}:1}" TextAlignment="Right" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Width="40"
+                    Margin="8"
+                    VerticalAlignment="Center"
+                    Text="{Binding DesiredContrastRatio.Value, StringFormat={}{0}:1}"
+                    TextAlignment="Right" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Contrast" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="10"
+                    VerticalAlignment="Center"
+                    Text="Contrast" />
                 <ComboBox
                     Grid.Row="1"
                     Grid.Column="1"
                     ItemsSource="{Binding ContrastValues}"
                     SelectedItem="{Binding ContrastValue.Value}" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Color Selection" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="10"
+                    VerticalAlignment="Center"
+                    Text="Color Selection" />
                 <ComboBox
                     Grid.Row="2"
                     Grid.Column="1"

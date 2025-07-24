@@ -2,12 +2,10 @@
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using R3;
-using R3MaterialDesignNavigationTransitionTemplate.Extensions.R3Json;
 using R3MaterialDesignNavigationTransitionTemplate.Models;
 
 namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 {
-    [BindableObject("color_tool")]
     internal class ColorToolBoxViewModel : BoxViewModelBase
     {
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
@@ -24,16 +22,11 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 
         public BindableReactiveProperty<ColorScheme> ActiveScheme { get; }
 
-        [BindableProperty("primary_color")]
         public Color? PrimaryColor { get; set; }
-        [BindableProperty("secondary_color")]
 
         public Color? SecondaryColor { get; set; }
 
-        [BindableProperty("primary_foreground_color")]
         public Color? PrimaryForegroundColor { get; set; }
-
-        [BindableProperty("secondary_foreground_color")]
         public Color? SecondaryForegroundColor { get; set; }
 
         private void ApplyBase(bool isDark)
@@ -41,7 +34,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             Theme theme = _paletteHelper.GetTheme();
             theme.SetBaseTheme(isDark ? BaseTheme.Dark : BaseTheme.Light);
             _paletteHelper.SetTheme(theme);
-            App.GetService<AppConfig>()!.Save(this);
+            App.GetService<AppConfig>()!.Save();
         }
 
         public ColorToolBoxViewModel() : base()
@@ -86,7 +79,6 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             this.PrimaryColor = theme.PrimaryMid.Color;
             this.SecondaryColor = theme.SecondaryMid.Color;
             SelectedColor.Value = this.PrimaryColor;
-            conf.Load<ColorToolBoxViewModel>(this);
         }
 
         private void ChangeCustomColor(Color color)
@@ -114,7 +106,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             }
             RaisePropertyChanged(nameof(ActiveScheme));
             _paletteHelper.SetTheme(theme);
-            App.GetService<AppConfig>()!.Save(this);
+            App.GetService<AppConfig>()!.Save();
         }
 
         private void ChangeScheme(ColorScheme scheme)
@@ -167,7 +159,7 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
             }
             _paletteHelper.SetTheme(theme);
             RaisePropertyChanged(nameof(ActiveScheme));
-            App.GetService<AppConfig>()!.Save(this);
+            App.GetService<AppConfig>()!.Save();
         }
     }
 }

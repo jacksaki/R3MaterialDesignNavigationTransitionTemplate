@@ -9,124 +9,123 @@ using R3MaterialDesignNavigationTransitionTemplate.Extensions;
 using R3MaterialDesignNavigationTransitionTemplate.Models;
 using R3MaterialDesignNavigationTransitionTemplate.Views;
 
-namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
+namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels;
+
+public class MainWindowViewModel : ViewModelBase
 {
-    public class MainWindowViewModel : ViewModelBase
+    public delegate void SnackbarMessageEventHandler(object sender, SnackbarMessageEventArgs e);
+    public event SnackbarMessageEventHandler SnackbarMessage = delegate { };
+
+    private readonly ICollectionView _menuItemsView;
+    public BindableReactiveProperty<int> SelectedIndex { get; }
+
+    public BindableReactiveProperty<string?> SearchKeyword { get; }
+
+    public ObservableCollection<NavigationMenuItem> MenuItems { get; }
+
+    public BindableReactiveProperty<NavigationMenuItem?> SelectedItem { get; }
+
+    public BindableReactiveProperty<bool> ControlsEnabled { get; }
+
+    public ReactiveCommand HomeCommand { get; }
+    public ReactiveCommand MovePrevCommand { get; }
+    public ReactiveCommand MoveNextCommand { get; }
+
+    public SnackbarMessageQueue SnackbarMessageQueue { get; }
+
+    public IDialogCoordinator? DialogCoordinator
     {
-        public delegate void SnackbarMessageEventHandler(object sender, SnackbarMessageEventArgs e);
-        public event SnackbarMessageEventHandler SnackbarMessage = delegate { };
+        get;
+        set;
+    }
 
-        private readonly ICollectionView _menuItemsView;
-        public BindableReactiveProperty<int> SelectedIndex { get; }
+    public string AppTitle { get; }
+    public string AppFullTitle { get; }
+    public string AppVersion { get; }
 
-        public BindableReactiveProperty<string?> SearchKeyword { get; }
-
-        public ObservableCollection<NavigationMenuItem> MenuItems { get; }
-
-        public BindableReactiveProperty<NavigationMenuItem?> SelectedItem { get; }
-
-        public BindableReactiveProperty<bool> ControlsEnabled { get; }
-
-        public ReactiveCommand HomeCommand { get; }
-        public ReactiveCommand MovePrevCommand { get; }
-        public ReactiveCommand MoveNextCommand { get; }
-
-        public SnackbarMessageQueue SnackbarMessageQueue { get; }
-
-        public IDialogCoordinator? DialogCoordinator
+    public MainWindowViewModel()
+    {
+        this.DialogCoordinator = MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance;
+        var version = System.Reflection.Assembly.GetExecutingAssembly().GetVersion();
+        var fv = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        this.AppTitle = $"{fv.ProductName}";
+        this.AppVersion = $"ver {version}";
+        this.AppFullTitle = $"{AppTitle} {AppVersion}";
+        this.MenuItems = new ObservableCollection<NavigationMenuItem>();
+        foreach (var item in GenerateMenuItems())
         {
-            get;
-            set;
+            this.MenuItems.Add(item);
         }
+        this.SelectedIndex = new BindableReactiveProperty<int>(0);
+        this.SearchKeyword = new BindableReactiveProperty<string?>();
+        this.SelectedItem = new BindableReactiveProperty<NavigationMenuItem?>();
+        this.ControlsEnabled = new BindableReactiveProperty<bool>();
 
-        public string AppTitle { get; }
-        public string AppFullTitle { get; }
-        public string AppVersion { get; }
+        this.SelectedItem.Value = this.MenuItems.FirstOrDefault();
+        _menuItemsView = CollectionViewSource.GetDefaultView(MenuItems);
+        _menuItemsView.Filter = MenuItemsFilter;
 
-        public MainWindowViewModel()
-        {
-            this.DialogCoordinator = MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance;
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetVersion();
-            var fv = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            this.AppTitle = $"{fv.ProductName}";
-            this.AppVersion = $"ver {version}";
-            this.AppFullTitle = $"{AppTitle} {AppVersion}";
-            this.MenuItems = new ObservableCollection<NavigationMenuItem>();
-            foreach (var item in GenerateMenuItems())
+        this.SelectedIndex = new BindableReactiveProperty<int>(0);
+        this.HomeCommand = new ReactiveCommand();
+        this.HomeCommand.Subscribe(
+            _ =>
             {
-                this.MenuItems.Add(item);
-            }
-            this.SelectedIndex = new BindableReactiveProperty<int>(0);
-            this.SearchKeyword = new BindableReactiveProperty<string?>();
-            this.SelectedItem = new BindableReactiveProperty<NavigationMenuItem?>();
-            this.ControlsEnabled = new BindableReactiveProperty<bool>();
+                this.SearchKeyword.Value = string.Empty;
+                this.SelectedIndex.Value = 0;
+            });
 
-            this.SelectedItem.Value = this.MenuItems.FirstOrDefault();
-            _menuItemsView = CollectionViewSource.GetDefaultView(MenuItems);
-            _menuItemsView.Filter = MenuItemsFilter;
-
-            this.SelectedIndex = new BindableReactiveProperty<int>(0);
-            this.HomeCommand = new ReactiveCommand();
-            this.HomeCommand.Subscribe(
-                _ =>
-                {
+        this.MovePrevCommand = new ReactiveCommand();
+        this.MovePrevCommand.Select(x => this.SelectedIndex.Value > 0).Subscribe(
+            _ =>
+            {
+                if (!string.IsNullOrWhiteSpace(this.SearchKeyword.Value))
                     this.SearchKeyword.Value = string.Empty;
-                    this.SelectedIndex.Value = 0;
-                });
 
-            this.MovePrevCommand = new ReactiveCommand();
-            this.MovePrevCommand.Select(x => this.SelectedIndex.Value > 0).Subscribe(
-                _ =>
-                {
-                    if (!string.IsNullOrWhiteSpace(this.SearchKeyword.Value))
-                        this.SearchKeyword.Value = string.Empty;
+                this.SelectedIndex.Value--;
+            });
 
-                    this.SelectedIndex.Value--;
-                });
+        this.MoveNextCommand = new ReactiveCommand();
+        this.MoveNextCommand.Select(x => SelectedIndex.Value < MenuItems.Count - 1).Subscribe(
+           _ =>
+           {
+               if (!string.IsNullOrWhiteSpace(this.SearchKeyword.Value))
+                   this.SearchKeyword.Value = string.Empty;
 
-            this.MoveNextCommand = new ReactiveCommand();
-            this.MoveNextCommand.Select(x => SelectedIndex.Value < MenuItems.Count - 1).Subscribe(
-               _ =>
-               {
-                   if (!string.IsNullOrWhiteSpace(this.SearchKeyword.Value))
-                       this.SearchKeyword.Value = string.Empty;
+               this.SelectedIndex.Value++;
+           });
+        this.SnackbarMessageQueue = new SnackbarMessageQueue();
+    }
 
-                   this.SelectedIndex.Value++;
-               });
-            this.SnackbarMessageQueue = new SnackbarMessageQueue();
-        }
+    private static IEnumerable<NavigationMenuItem> GenerateMenuItems()
+    {
+        yield return new NavigationMenuItem("Sample", typeof(SampleBox), PackIconKind.Home);
+        yield return new NavigationMenuItem("Transition", typeof(TransitionBox), PackIconKind.Transition);
+        yield return new NavigationMenuItem("Color", typeof(ColorSettingsBox), PackIconKind.Palette);
+    }
 
-        private static IEnumerable<NavigationMenuItem> GenerateMenuItems()
+    private bool MenuItemsFilter(object obj)
+    {
+        if (string.IsNullOrWhiteSpace(this.SearchKeyword.Value))
         {
-            yield return new NavigationMenuItem("Sample", typeof(SampleBox), PackIconKind.Home);
-            yield return new NavigationMenuItem("Transition", typeof(TransitionBox), PackIconKind.Transition);
-            yield return new NavigationMenuItem("Color", typeof(ColorSettingsBox), PackIconKind.Palette, ScrollBarVisibility.Disabled, ScrollBarVisibility.Auto);
+            return true;
         }
 
-        private bool MenuItemsFilter(object obj)
-        {
-            if (string.IsNullOrWhiteSpace(this.SearchKeyword.Value))
-            {
-                return true;
-            }
+        return obj is NavigationMenuItem item
+               && item.Name.ToLower().Contains(this.SearchKeyword.Value!.ToLower());
+    }
 
-            return obj is NavigationMenuItem item
-                   && item.Name.ToLower().Contains(this.SearchKeyword.Value!.ToLower());
-        }
+    public void OnErrorOccurred(object sender, ErrorOccurredEventArgs e)
+    {
+        DialogCoordinator?.ShowMessageAsync(this, "エラー", e.Message, MessageDialogStyle.Affirmative);
+    }
 
-        public void OnErrorOccurred(object sender, ErrorOccurredEventArgs e)
-        {
-            DialogCoordinator?.ShowMessageAsync(this, "エラー", e.Message, MessageDialogStyle.Affirmative);
-        }
+    public void OnMessage(object sender, MessageEventArgs e)
+    {
+        DialogCoordinator?.ShowMessageAsync(this, e.Title, e.Message, MessageDialogStyle.Affirmative);
+    }
 
-        public void OnMessage(object sender, MessageEventArgs e)
-        {
-            DialogCoordinator?.ShowMessageAsync(this, e.Title, e.Message, MessageDialogStyle.Affirmative);
-        }
-
-        public void OnSnackBarMessage(object sender, SnackBarMessageEventArgs e)
-        {
-            this.SnackbarMessageQueue.Enqueue(e.Message);
-        }
+    public void OnSnackBarMessage(object sender, SnackBarMessageEventArgs e)
+    {
+        this.SnackbarMessageQueue.Enqueue(e.Message);
     }
 }

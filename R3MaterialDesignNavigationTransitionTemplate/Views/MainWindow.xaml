@@ -11,10 +11,7 @@
     xmlns:v="clr-namespace:R3MaterialDesignNavigationTransitionTemplate.Views"
     xmlns:vm="clr-namespace:R3MaterialDesignNavigationTransitionTemplate.ViewModels"
     xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
-    wpf:TransitionAssist.DisableTransitions="True"
     Title="{Binding AppFullTitle}"
-    Width="800"
-    Height="450"
     dlg:DialogParticipation.Register="{Binding}"
     Background="{DynamicResource MaterialDesignPaper}"
     BorderThickness="1"
@@ -22,13 +19,13 @@
     GlowBrush="{DynamicResource AccentColorBrush}"
     Style="{StaticResource MaterialDesignWindow}"
     TextElement.FontSize="16"
-    WindowStartupLocation="CenterScreen"
-    SizeToContent="WidthAndHeight"    
     TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     TitleCharacterCasing="Normal"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -44,7 +41,12 @@
                     <TextBlock Text="England win the World Cup:" />
                     <TextBlock Margin="0,8,0,0" Text="{Binding}" />
                     <TextBlock Margin="0,8,0,0" Text="You will never see that again." />
-                    <Button Margin="0,8,0,0" Command="{x:Static wpf:DialogHost.CloseDialogCommand}" Content="AWESOME" IsDefault="True" Style="{StaticResource MaterialDesignFlatButton}" />
+                    <Button
+                        Margin="0,8,0,0"
+                        Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                        Content="AWESOME"
+                        IsDefault="True"
+                        Style="{StaticResource MaterialDesignFlatButton}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -65,7 +67,16 @@
                         IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"
                         Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
-                    <TextBox x:Name="MenuItemsSearchBox" Width="200" Margin="16,4" wpf:HintAssist.Hint="Search" wpf:TextFieldAssist.DecorationVisibility="Collapsed" wpf:TextFieldAssist.HasClearButton="True" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignOutlinedTextBox}" Text="{Binding SearchKeyword.Value, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        x:Name="MenuItemsSearchBox"
+                        Width="200"
+                        Margin="16,4"
+                        wpf:HintAssist.Hint="Search"
+                        wpf:TextFieldAssist.DecorationVisibility="Collapsed"
+                        wpf:TextFieldAssist.HasClearButton="True"
+                        DockPanel.Dock="Top"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        Text="{Binding SearchKeyword.Value, UpdateSourceTrigger=PropertyChanged}" />
 
                     <ListBox
                         x:Name="MenuItemsListBox"
@@ -82,8 +93,11 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="m:MenuItem">
                                 <StackPanel Orientation="Horizontal">
-                                    <wpf:PackIcon Kind="{Binding PackIconKind}"/>
-                                    <TextBlock Margin="24,4,0,4" AutomationProperties.AutomationId="MenuItemPage" Text="{Binding Name}" />
+                                    <wpf:PackIcon Kind="{Binding PackIconKind}" />
+                                    <TextBlock
+                                        Margin="24,4,0,4"
+                                        AutomationProperties.AutomationId="MenuItemPage"
+                                        Text="{Binding Name}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -106,11 +120,35 @@
                                 IsChecked="False"
                                 Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
-                            <Button Margin="24,0,0,0" wpf:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}" Command="{Binding MovePrevCommand}" Content="{wpf:PackIcon Kind=ArrowLeft, Size=24}" Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" Style="{StaticResource MaterialDesignToolButton}" ToolTip="Previous Item" />
+                            <Button
+                                Margin="24,0,0,0"
+                                wpf:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}"
+                                Command="{Binding MovePrevCommand}"
+                                Content="{wpf:PackIcon Kind=ArrowLeft,
+                                                       Size=24}"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                Style="{StaticResource MaterialDesignToolButton}"
+                                ToolTip="Previous Item" />
 
-                            <Button Margin="16,0,0,0" wpf:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}" Command="{Binding MoveNextCommand}" Content="{wpf:PackIcon Kind=ArrowRight, Size=24}" Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" Style="{StaticResource MaterialDesignToolButton}" ToolTip="Next Item" />
+                            <Button
+                                Margin="16,0,0,0"
+                                wpf:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}"
+                                Command="{Binding MoveNextCommand}"
+                                Content="{wpf:PackIcon Kind=ArrowRight,
+                                                       Size=24}"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                Style="{StaticResource MaterialDesignToolButton}"
+                                ToolTip="Next Item" />
 
-                            <Button Margin="16,0,0,0" wpf:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}" Command="{Binding HomeCommand}" Content="{wpf:PackIcon Kind=Home, Size=24}" Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" Style="{StaticResource MaterialDesignToolButton}" ToolTip="Home" />
+                            <Button
+                                Margin="16,0,0,0"
+                                wpf:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}"
+                                Command="{Binding HomeCommand}"
+                                Content="{wpf:PackIcon Kind=Home,
+                                                       Size=24}"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                Style="{StaticResource MaterialDesignToolButton}"
+                                ToolTip="Home" />
                         </StackPanel>
 
                         <wpf:PopupBox
@@ -135,22 +173,35 @@
                                         x:Name="DarkModeToggleButton"
                                         Grid.Column="1"
                                         Click="MenuDarkModeButton_Click" />
-                                    <TextBlock Grid.Column="2" Margin="10,0,0,0" Text="Dark" />
-                                    <TextBlock Grid.Row="1" Margin="0,10,10,0" Text="Enabled" />
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Margin="10,0,0,0"
+                                        Text="Dark" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Margin="0,10,10,0"
+                                        Text="Enabled" />
                                     <ToggleButton
                                         x:Name="ControlsEnabledToggleButton"
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Margin="0,10,0,0"
                                         IsChecked="{Binding ControlsEnabled.Value}" />
-                                    <TextBlock Grid.Row="2" Margin="0,10,10,0" Text="LTR" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Margin="0,10,10,0"
+                                        Text="LTR" />
                                     <ToggleButton
                                         x:Name="FlowDirectionToggleButton"
                                         Grid.Row="2"
                                         Grid.Column="1"
                                         Margin="0,10,0,0"
                                         Click="FlowDirectionButton_Click" />
-                                    <TextBlock Grid.Row="2" Grid.Column="2" Margin="10,10,0,0" Text="RTL" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        Margin="10,10,0,0"
+                                        Text="RTL" />
                                 </Grid>
                                 <Separator />
                                 <Button IsEnabled="False" />
@@ -162,8 +213,17 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding AppTitle}" />
-                            <TextBlock HorizontalAlignment="Center" Margin="10" VerticalAlignment="Bottom" FontSize="16" Text="{Binding AppVersion}" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="22"
+                                Text="{Binding AppTitle}" />
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                FontSize="16"
+                                Text="{Binding AppVersion}" />
                         </StackPanel>
                     </DockPanel>
                 </wpf:ColorZone>

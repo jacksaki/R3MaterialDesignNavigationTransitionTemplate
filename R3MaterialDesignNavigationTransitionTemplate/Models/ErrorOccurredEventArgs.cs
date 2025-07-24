@@ -1,18 +1,12 @@
-﻿namespace R3MaterialDesignNavigationTransitionTemplate.Models
+﻿namespace R3MaterialDesignNavigationTransitionTemplate.Models;
+
+public class ErrorOccurredEventArgs(string title, string message, Exception? ex) : EventArgs
 {
-    public class ErrorOccurredEventArgs : EventArgs
+    public ErrorOccurredEventArgs(string title, string message) : this(title, message, null)
     {
-        public ErrorOccurredEventArgs(string title, string message) : this(title, message, null)
-        {
-        }
-        public ErrorOccurredEventArgs(string title, string message, Exception? ex)
-        {
-            this.Title = title;
-            this.Message = message;
-            this.Exception = ex;
-        }
-        public string Title { get; }
-        public string Message { get; }
-        public Exception? Exception { get; }
     }
+
+    public string Title => title;
+    public string Message => message;
+    public Exception? Exception => ex;
 }

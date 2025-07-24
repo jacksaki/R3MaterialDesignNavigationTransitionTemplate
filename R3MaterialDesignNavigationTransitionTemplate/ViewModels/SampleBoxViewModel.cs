@@ -7,16 +7,11 @@ namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 {
     public class SampleBoxViewModel : BoxViewModelBase
     {
-        public static new string Key => "sample";
-        [JsonPropertyName("value")]
         public BindableReactiveProperty<int> Value { get; }
         public ReactiveCommand IncrementCommand { get; }
         public ReactiveCommand ResetCommand { get; }
-        [JsonPropertyName("value")]
         public BindableReactiveProperty<string> SnackBarMessageText { get; }
-        [JsonPropertyName("message_title")]
         public BindableReactiveProperty<string> MessageTitle { get; }
-        [JsonPropertyName("message_text")]
         public BindableReactiveProperty<string> MessageText { get; }
         public BindableReactiveProperty<bool> CanSendMessage { get; }
         public BindableReactiveProperty<bool> IsError { get; }

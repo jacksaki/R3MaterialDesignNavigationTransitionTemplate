@@ -1,7 +1,6 @@
-﻿namespace R3MaterialDesignNavigationTransitionTemplate.Models
+﻿namespace R3MaterialDesignNavigationTransitionTemplate.Models;
+
+public class SnackBarMessageEventArgs(string message) : EventArgs
 {
-    public class SnackBarMessageEventArgs(string message) : EventArgs
-    {
-        public string Message => message;
-    }
+    public string Message => message;
 }

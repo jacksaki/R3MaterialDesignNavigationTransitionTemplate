@@ -2,29 +2,28 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace R3MaterialDesignNavigationTransitionTemplate.Converters
-{
-    public sealed class IsTransparentConverter : IValueConverter
-    {
-        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            Color? color = value switch
-            {
-                Color c => c,
-                SolidColorBrush brush => brush.Color,
-                _ => null
-            };
-            return color == Colors.Transparent;
-        }
+namespace R3MaterialDesignNavigationTransitionTemplate.Converters;
 
-        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+public sealed class IsTransparentConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        Color? color = value switch
         {
-            if (value is bool boolValue &&
-                boolValue)
-            {
-                return Colors.Transparent;
-            }
-            return Binding.DoNothing;
+            Color c => c,
+            SolidColorBrush brush => brush.Color,
+            _ => null
+        };
+        return color == Colors.Transparent;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is bool boolValue &&
+            boolValue)
+        {
+            return Colors.Transparent;
         }
+        return Binding.DoNothing;
     }
 }

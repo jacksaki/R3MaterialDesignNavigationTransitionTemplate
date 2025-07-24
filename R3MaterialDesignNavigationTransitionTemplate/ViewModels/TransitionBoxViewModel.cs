@@ -1,11 +1,5 @@
 ﻿using R3;
 using R3MaterialDesignNavigationTransitionTemplate.ViewModels.Transitions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.System.Threading;
 
 namespace R3MaterialDesignNavigationTransitionTemplate.ViewModels
 {

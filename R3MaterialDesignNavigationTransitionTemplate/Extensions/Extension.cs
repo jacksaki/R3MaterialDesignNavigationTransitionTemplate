@@ -1,54 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using System.Windows.Media;
 
-namespace R3MaterialDesignNavigationTransitionTemplate.Extensions
+namespace R3MaterialDesignNavigationTransitionTemplate.Extensions;
+
+public static class Extension
 {
-    public static class Extension
+    public static string? GetVersion(this Assembly asm)
     {
-        public static string? GetVersion(this Assembly asm)
+        var version = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        if (version != null)
         {
-            var version = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            if (version != null)
+            int plusIndex = version.IndexOf('+');
+            if (plusIndex != -1)
             {
-                int plusIndex = version.IndexOf('+');
-                if (plusIndex != -1)
-                {
-                    return version.Substring(0, plusIndex);
-                }
+                return version.Substring(0, plusIndex);
             }
-
-            return version;
         }
 
-        public static string? ToHtmlColor(this Color? value)
-        {
-            if (value is null)
-            {
-                return null;
-            }
+        return version;
+    }
 
-            static string lowerHexString(int i) => i.ToString("X2").ToLower();
-            var hex = lowerHexString(value.Value.R) +
-                      lowerHexString(value.Value.G) +
-                      lowerHexString(value.Value.B);
-            return "#" + hex;
+    public static string? ToHtmlColor(this Color? value)
+    {
+        if (value is null)
+        {
+            return null;
         }
 
-        public static Color? ToColor(this string code)
+        static string lowerHexString(int i) => i.ToString("X2").ToLower();
+        var hex = lowerHexString(value.Value.R) +
+                  lowerHexString(value.Value.G) +
+                  lowerHexString(value.Value.B);
+        return "#" + hex;
+    }
+
+    public static Color? ToColor(this string code)
+    {
+        try
         {
-            try
-            {
-                return (Color)ColorConverter.ConvertFromString(code);
-            }
-            catch (FormatException)
-            {
-                return null;
-            }
+            return (Color)ColorConverter.ConvertFromString(code);
+        }
+        catch (FormatException)
+        {
+            return null;
         }
     }
 }

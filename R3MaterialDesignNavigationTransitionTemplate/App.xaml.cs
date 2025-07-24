@@ -78,50 +78,33 @@ namespace R3MaterialDesignNavigationTransitionTemplate
         {
             var conf = App.GetService<AppConfig>()!;
             var paletteHelper = new PaletteHelper();
-            var jobj = GetColorSettings(conf.JsonObject);
-            if (jobj == null)
+            var themeConf = conf.Theme;
+            if (themeConf == null)
             {
                 return;
             }
 
             Theme theme = paletteHelper.GetTheme();
-            theme.SetBaseTheme(jobj["is_dark"]?.GetValue<bool>() == true ? BaseTheme.Dark : BaseTheme.Light);
-            if (jobj.ContainsKey("primary_color"))
+            theme.SetBaseTheme(themeConf.IsDarkTheme ? BaseTheme.Dark : BaseTheme.Light);
+            if (themeConf.PrimaryColor.HasValue)
             {
-                var color = JsonSerializer.Deserialize<Color>(jobj["primary_color"]!.ToJsonString());
-                paletteHelper.ChangePrimaryColor(color);
+                paletteHelper.ChangePrimaryColor(themeConf.PrimaryColor.Value);
             }
-            if (jobj.ContainsKey("secondary_color"))
+            if (themeConf.SecondaryColor.HasValue)
             {
-                var color = JsonSerializer.Deserialize<Color>(jobj["secondary_color"]!.ToJsonString());
-                paletteHelper.ChangeSecondaryColor(color);
+                paletteHelper.ChangeSecondaryColor(themeConf.SecondaryColor.Value);
             }
             paletteHelper.SetTheme(theme);
         }
 
-        private JsonObject? GetColorSettings(JsonObject? root)
-        {
-            if (root == null)
-            {
-                return null;
-            }
-            else if (!root.ContainsKey("color"))
-            {
-                return null;
-            }
-            else
-            {
-                return root["color"]!.AsObject();
-            }
-        }
-
         private async void Application_Exit(object sender, ExitEventArgs e)
         {
-            //var paletteHelper = new PaletteHel
+            var paletteHelper = new PaletteHelper();
+            paletteHelper.GetTheme();
             //per();
             var config = App.GetService<AppConfig>()!;
-            //config.Theme = paletteHelper.GetConfig();
-            config.SaveToFile();
+            config.SetTheme(paletteHelper.GetConfig());
+            config.Save();
             await _host.StopAsync();
 
             _host.Dispose();
