@@ -25,13 +25,13 @@ public class NavigationMenuItem(
         string name, 
         Type t, 
         PackIconKind? packIconKind
-        ) : this(name, t, packIconKind, ScrollBarVisibility.Auto, ScrollBarVisibility.Auto)
+        ) : this(name, t, packIconKind, ScrollBarVisibility.Disabled, ScrollBarVisibility.Disabled)
     {
     }
 
     public NavigationMenuItem(
         string name, 
-        Type t) : this(name, t , null, ScrollBarVisibility.Auto, ScrollBarVisibility.Auto)
+        Type t) : this(name, t , null, ScrollBarVisibility.Disabled, ScrollBarVisibility.Disabled)
     {
     }
     private object? CreateContent()

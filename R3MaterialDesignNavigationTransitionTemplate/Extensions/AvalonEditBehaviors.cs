@@ -42,7 +42,7 @@ public static class AvalonEditBehaviors
     // 再帰更新防止用
     private static readonly HashSet<TextEditor> _isUpdatingText = new();
 
-    private static void Editor_TextChanged(object sender, EventArgs e)
+    private static void Editor_TextChanged(object? sender, EventArgs e)
     {
         if (sender is TextEditor editor)
         {
